@@ -77,28 +77,28 @@ public class AIController : MonoBehaviour
         }
     }
     
-    void Hearing()
-    {
-        if (playerInHearing)
-        {
-            agent.SetDestination(noisePos);
-            agent.speed = searchSpeed;
-            canSearch = true;
-        }
-        else
-        {
-            agent.speed = 3f;
-        }
+    //void Hearing()
+    //{
+    //    if (playerInHearing)
+    //    {
+    //        agent.SetDestination(noisePos);
+    //        agent.speed = searchSpeed;
+    //        canSearch = true;
+    //    }
+    //    else
+    //    {
+    //        agent.speed = 3f;
+    //    }
 
-        if (canSearch)
-        {
-            searchTimer += Time.deltaTime;
-            if (searchTimer >= searchTime)
-            {
-                canSearch = false;
-                searchTimer = 0f;
-            }
-        }
-    }
+    //    if (canSearch)
+    //    {
+    //        searchTimer += Time.deltaTime;
+    //        if (searchTimer >= searchTime)
+    //        {
+    //            canSearch = false;
+    //            searchTimer = 0f;
+    //        }
+    //    }
+    //}
 }
 
