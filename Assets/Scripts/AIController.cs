@@ -73,6 +73,7 @@ public class AIController : MonoBehaviour
         else
         {
             enemyInLoS = false;
+            Debug.Log("Player not in LoS");
         }
     }
     
