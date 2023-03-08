@@ -14,19 +14,19 @@ public class AIController : MonoBehaviour
     public float fov = 50f;
     public float los = 45f;
 
-    //Memory
-    private bool playerInMemory = false;
-    public float memoryTime = 5f;
-    private float memoryTimer = 0f;
+    ////Memory
+    //private bool playerInMemory = false;
+    //public float memoryTime = 5f;
+    //private float memoryTimer = 0f;
 
-    //Hearing system
-    Vector3 noisePos;
-    public bool playerInHearing = false;
-    public float hearingRange = 10f;
-    public float searchSpeed = 3f;
-    private bool canSearch = false;
-    private float searchTimer = 0f;
-    public float searchTime = 5f;
+    ////Hearing system
+    //Vector3 noisePos;
+    //public bool playerInHearing = false;
+    //public float hearingRange = 10f;
+    //public float searchSpeed = 3f;
+    //private bool canSearch = false;
+    //private float searchTimer = 0f;
+    //public float searchTime = 5f;
 
 
     // Start is called before the first frame update
@@ -38,10 +38,11 @@ public class AIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if(agent.remainingDistance < 2)
-        //{
-        //    agent.SetDestination(new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
-        //}
+        agent.SetDestination(player.transform.position);
+        if (agent.remainingDistance < 2)
+        {
+            agent.SetDestination(new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
+        }
         Sight();
     }
 
@@ -59,8 +60,8 @@ public class AIController : MonoBehaviour
                 if (hit.collider.gameObject.tag == "Player")
                 {
                     enemyInLoS = true;
-                    playerInMemory = true;
-                    memoryTimer = 0f;
+                    //playerInMemory = true;
+                    //memoryTimer = 0f;
                     Debug.Log("Player in LoS");
                 }
                 else
