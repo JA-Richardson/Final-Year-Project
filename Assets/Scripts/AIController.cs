@@ -8,6 +8,7 @@ public class AIController : MonoBehaviour
 
     public NavMeshAgent agent;
     public GameObject player;
+    States currentState;
     
     //visual system
     public bool enemyInLoS = false;
@@ -33,50 +34,53 @@ public class AIController : MonoBehaviour
     void Start()
     {
         agent = this.GetComponent<NavMeshAgent>();
+        currentState = new Idle(gameObject, agent, player.transform);
     }
 
     // Update is called once per frame
     void Update()
     {
-        agent.SetDestination(player.transform.position);
-        if (agent.remainingDistance < 2)
-        {
-            agent.SetDestination(new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
-        }
-        Sight();
+        currentState = currentState.Process();
+
+        //agent.SetDestination(player.transform.position);
+        //if (agent.remainingDistance < 2)
+        //{
+        //    agent.SetDestination(new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)));
+        //}
+        //Sight();
     }
 
-    void Sight()
-    {
-        Vector3 direction = player.transform.position - transform.position;
-        float angle = Vector3.Angle(direction, transform.forward);
+    //void Sight()
+    //{
+    //    Vector3 direction = player.transform.position - transform.position;
+    //    float angle = Vector3.Angle(direction, transform.forward);
 
-        if (angle < fov * 0.5f)
-        {
-            RaycastHit hit;
-            Debug.DrawRay(transform.position + transform.up, direction.normalized * los, Color.green);
-            if (Physics.Raycast(transform.position + transform.up, direction.normalized, out hit, los))
-            {
-                if (hit.collider.gameObject.tag == "Player")
-                {
-                    enemyInLoS = true;
-                    //playerInMemory = true;
-                    //memoryTimer = 0f;
-                    Debug.Log("Player in LoS");
-                }
-                else
-                {
-                    enemyInLoS = false;
-                    Debug.Log("Player not in LoS");
-                }
-            }
-        }
-        else
-        {
-            enemyInLoS = false;
-            Debug.Log("Player not in LoS");
-        }
-    }
+    //    if (angle < fov * 0.5f)
+    //    {
+    //        RaycastHit hit;
+    //        Debug.DrawRay(transform.position + transform.up, direction.normalized * los, Color.green);
+    //        if (Physics.Raycast(transform.position + transform.up, direction.normalized, out hit, los))
+    //        {
+    //            if (hit.collider.gameObject.tag == "Player")
+    //            {
+    //                enemyInLoS = true;
+    //                //playerInMemory = true;
+    //                //memoryTimer = 0f;
+    //                Debug.Log("Player in LoS");
+    //            }
+    //            else
+    //            {
+    //                enemyInLoS = false;
+    //                Debug.Log("Player not in LoS");
+    //            }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        enemyInLoS = false;
+    //        Debug.Log("Player not in LoS");
+    //    }
+    //}
     
     //void Hearing()
     //{

@@ -12,8 +12,8 @@ public class PlayerController : MonoBehaviour {
 
     void Start(){
         rb = this.GetComponent<Rigidbody>();
-        animator = GetComponentInChildren<Animator>();
-        animator.SetBool("Idling", true);
+        //animator = GetComponentInChildren<Animator>();
+        //animator.SetBool("Idling", true);
     }
 	
     // Update is called once per frame
@@ -27,20 +27,20 @@ public class PlayerController : MonoBehaviour {
         rb.MovePosition(rb.position + this.transform.forward * translation);
         rb.MoveRotation(rb.rotation * turn);
 
-        if(translation != 0) 
-        {
-            animator.SetBool("Idling", false);
-        }
-        else
-        {
-            animator.SetBool("Idling", true);
-        }
+        //if(translation != 0) 
+        //{
+        //    animator.SetBool("Idling", false);
+        //}
+        //else
+        //{
+        //    animator.SetBool("Idling", true);
+        //}
 
-        if (dead)
-        {
-            animator.SetTrigger("isDead");
-            this.enabled = false;
-        }
+        //if (dead)
+        //{
+        //    animator.SetTrigger("isDead");
+        //    this.enabled = false;
+        //}
 
 
     }

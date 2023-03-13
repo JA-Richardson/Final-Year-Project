@@ -6,6 +6,7 @@ TagManager:
   tags:
   - wp
   - AI
+  - PatrolPoint
   layers:
   - Default
   - TransparentFX
