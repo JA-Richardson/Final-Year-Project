@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 public class States
 {
-    public enum STATE { IDLE, PATROL, CHASE, ATTACK, DEAD };
+    public enum STATE { IDLE, PATROL, CHASE, ATTACK, DEAD, FLEE };
 
     public enum EVENT { ENTER, UPDATE, EXIT };
 
@@ -17,15 +18,15 @@ public class States
     protected NavMeshAgent agent;
     public States nextState;
 
-    public float visDist = 10.0f;
-    float visAngle = 30.0f;
-    float shootDist = 2.0f;
+    public float visDist = 20.0f;
+    float visAngle = 50.0f;
+    float shootDist = 10.0f;
 
     public States(GameObject sNPC, UnityEngine.AI.NavMeshAgent sAgent, Transform sPlayer)
     {
         NPC = sNPC;
         agent = sAgent;
-        this.player = sPlayer;
+        player = sPlayer;
         stage = EVENT.ENTER;
     }
 
@@ -62,73 +63,77 @@ public class States
         return this;
     }
 
+    public bool CanSeePlayer()
+    {
+        Vector3 dir = player.position - NPC.transform.position;
+        float angle = Vector3.Angle(dir, NPC.transform.forward);
+        if (dir.magnitude < visDist && angle < visAngle)
+        {
+            //Debug.Log("Can see");
+            return true;
+        }
+        return false;
+    }
 
+    public bool IsPlayerBehind()
+    {
+        Vector3 dir = NPC.transform.position - player.position;
+        float angle = Vector3.Angle(dir, NPC.transform.forward);
+        if (dir.magnitude < 2 && angle < 30)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool CanAttackPlayer()
+    {
+        Vector3 dir = player.position - NPC.transform.position;
+        if(dir.magnitude < shootDist)
+        {
+            Debug.Log("Can attack");
+            return true;
+        }
+        return false;
+    }
 }
 
-public class Idle : States
+public class Flee : States 
 {
-    public Idle(GameObject sNPC, UnityEngine.AI.NavMeshAgent sAgent, Transform sPlayer) : base(sNPC, sAgent, sPlayer)
+    GameObject safeLocation;
+    public Flee(GameObject sNPC, UnityEngine.AI.NavMeshAgent sAgent, Transform sPlayer) : base(sNPC, sAgent, sPlayer)
     {
-        name = STATE.IDLE;
+        name = STATE.FLEE;
+        safeLocation = GameObject.FindGameObjectWithTag("Safe");
     }
 
     public override void Enter()
     {
+        agent.isStopped = false;
+        agent.speed = 6;
+        agent.SetDestination(safeLocation.transform.position);
         base.Enter();
-        agent.isStopped = true;
-
     }
 
     public override void Update()
     {
-        base.Update();
-        if (Random.Range(0, 100) < 10)
+        if(agent.remainingDistance < 1)
         {
-            nextState = new Patrol(NPC, agent, player);
+            nextState = new Idle(NPC, agent, player);
             stage = EVENT.EXIT;
         }
-        
+        base.Update();
     }
 
     public override void Exit()
     {
         base.Exit();
     }
+
 }
 
-public class Patrol : States
-{
-    int currentIndex = -1;
-    public Patrol(GameObject sNPC, UnityEngine.AI.NavMeshAgent sAgent, Transform sPlayer) : base(sNPC, sAgent, sPlayer)
-    {
-        name = STATE.PATROL;
-        agent.speed = 2;
-        agent.isStopped = false;
-    }
 
-    public override void Enter()
-    {
-        base.Enter();
-        agent.isStopped = false;
-        agent.SetDestination(player.position);
-    }
 
-    public override void Update()
-    {
-        if (agent.remainingDistance < 1)
-        {
-            if (currentIndex >= EnvironmentManager.Singleton.PatrolPoints.Count -1)
-            {
-                currentIndex = 0;
-            }
-            else
-                currentIndex++;
-            agent.SetDestination(EnvironmentManager.Singleton.PatrolPoints[currentIndex].transform.position);
-        }
-    }
 
-    public override void Exit()
-    {
-        base.Exit();
-    }
-}
+
+
