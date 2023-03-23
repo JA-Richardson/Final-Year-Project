@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
     float rotationSpeed = 50.0F;
     Animator animator;
     static public bool dead = false;
+    public float currentSpeed = 0.0f;
 
     void Start(){
         rb = this.GetComponent<Rigidbody>();
