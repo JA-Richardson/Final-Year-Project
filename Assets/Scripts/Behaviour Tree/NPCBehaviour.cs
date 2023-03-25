@@ -9,6 +9,7 @@ public class NPCBehaviour : MonoBehaviour
     BehaviourTree tree;
     public GameObject goal;
     public GameObject home;
+    public GameObject goal2;
     NavMeshAgent agent; 
     
     public enum ActionState { IDLE, WORKING};
@@ -23,24 +24,49 @@ public class NPCBehaviour : MonoBehaviour
         tree = new BehaviourTree("Behaviour Tree");
         BTSequence steal = new BTSequence("Steal");
         BTLeaf goToPos = new BTLeaf("Go To Position", GoToPosition);
+        BTLeaf goToPos2 = new BTLeaf("Go To Position2", GoToPosition2);
         BTLeaf goToHome = new BTLeaf("Go To Home", GoToHome);
+        BTSelector chooseGoal = new BTSelector("Choose Goal");
 
-        steal.AddChild(goToPos);
+        chooseGoal.AddChild(goToPos);
+        chooseGoal.AddChild(goToPos2);
+
+        steal.AddChild(chooseGoal);
         steal.AddChild(goToHome);
         tree.AddChild(steal);
 
         tree.PrintTree();
-        
     }
 
     public BTNode.NodeState GoToPosition()
     {
-        return GoToLocation(goal.transform.position);
+        return GoToFreeSpace(goal);
+    }
+
+    public BTNode.NodeState GoToPosition2()
+    {
+        return GoToFreeSpace(goal2);
     }
 
     public BTNode.NodeState GoToHome()
     {
         return GoToLocation(home.transform.position);
+    }
+
+    public BTNode.NodeState GoToFreeSpace(GameObject space)
+    {
+        BTNode.NodeState s = GoToLocation(space.transform.position);
+        if (s == BTNode.NodeState.SUCCESS)
+        {
+            if (!space.GetComponent<FreeSpace>().freeSpace)
+            {
+                space.SetActive(false);
+                return BTNode.NodeState.SUCCESS;
+            }
+            return BTNode.NodeState.FAILURE;
+        }
+        else
+            return s;
     }
 
     BTNode.NodeState GoToLocation(Vector3 location)
@@ -61,7 +87,6 @@ public class NPCBehaviour : MonoBehaviour
             state = ActionState.IDLE;
             return BTNode.NodeState.SUCCESS;
         }
-
         return BTNode.NodeState.RUNNING;
     }
 
