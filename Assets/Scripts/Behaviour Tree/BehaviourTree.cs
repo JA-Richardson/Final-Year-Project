@@ -14,6 +14,11 @@ public class BehaviourTree : BTNode
         nodeName = name;
     }
 
+    public override NodeState Process()
+    {
+        return children[currentChild].Process();
+    }
+
     struct BTNodeLevel
     {
         public BTNode node;

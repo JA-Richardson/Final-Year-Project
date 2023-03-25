@@ -16,6 +16,12 @@ public class BTNode
     {
         nodeName = name;
     }
+
+    public virtual NodeState Process()
+    {
+        return children[currentChild].Process();
+    }
+
     public void AddChild(BTNode child)
     {
         children.Add(child);
