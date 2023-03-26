@@ -17,25 +17,40 @@ public class NPCBehaviour : MonoBehaviour
 
     BTNode.NodeState treeState = BTNode.NodeState.RUNNING;
 
+    [Range(0, 100)]
+    public int health = 75;
+
     // Start is called before the first frame update
     void Start()
     {
         agent = this.GetComponent<NavMeshAgent>();
         tree = new BehaviourTree("Behaviour Tree");
-        BTSequence steal = new BTSequence("Steal");
+        BTSequence steal = new("Steal");
+        BTLeaf hasHealth = new BTLeaf("Has Health", HasHealth);
         BTLeaf goToPos = new BTLeaf("Go To Position", GoToPosition);
         BTLeaf goToPos2 = new BTLeaf("Go To Position2", GoToPosition2);
         BTLeaf goToHome = new BTLeaf("Go To Home", GoToHome);
         BTSelector chooseGoal = new BTSelector("Choose Goal");
 
+        BTInverter invertHealth = new("Invert Health");
+        invertHealth.AddChild(hasHealth);
+
         chooseGoal.AddChild(goToPos);
         chooseGoal.AddChild(goToPos2);
 
+        steal.AddChild(invertHealth);
         steal.AddChild(chooseGoal);
         steal.AddChild(goToHome);
         tree.AddChild(steal);
 
         tree.PrintTree();
+    }
+
+    public BTNode.NodeState HasHealth()
+    {
+        if(health < 50)
+            return BTNode.NodeState.FAILURE;
+        return BTNode.NodeState.SUCCESS;
     }
 
     public BTNode.NodeState GoToPosition()
@@ -93,7 +108,7 @@ public class NPCBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (treeState == BTNode.NodeState.RUNNING)
+        if (treeState != BTNode.NodeState.SUCCESS)
             treeState = tree.Process();
     }
 }
