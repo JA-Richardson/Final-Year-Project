@@ -16,6 +16,7 @@ public class BehaviourTree : BTNode
 
     public override NodeState Process()
     {
+        if (children.Count == 0) return NodeState.SUCCESS;
         return children[currentChild].Process();
     }
 

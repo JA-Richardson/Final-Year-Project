@@ -1,30 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.XR;
 
-public class NPCBehaviour : MonoBehaviour
+public class NPCBehaviour : BTAgent
 {
 
-    BehaviourTree tree;
+ 
     public GameObject goal;
     public GameObject home;
     public GameObject goal2;
-    NavMeshAgent agent; 
-    
-    public enum ActionState { IDLE, WORKING};
-    ActionState state = ActionState.IDLE;
-
-    BTNode.NodeState treeState = BTNode.NodeState.RUNNING;
 
     [Range(0, 100)]
     public int health = 75;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
-        agent = this.GetComponent<NavMeshAgent>();
-        tree = new BehaviourTree("Behaviour Tree");
+        base.Start();
         BTSequence steal = new("Steal");
         BTLeaf hasHealth = new BTLeaf("Has Health", HasHealth);
         BTLeaf goToPos = new BTLeaf("Go To Position", GoToPosition);
@@ -62,10 +57,15 @@ public class NPCBehaviour : MonoBehaviour
     {
         return GoToFreeSpace(goal2);
     }
-
+    
     public BTNode.NodeState GoToHome()
     {
-        return GoToLocation(home.transform.position);
+        BTNode.NodeState s = GoToLocation(home.transform.position);
+        if(s == BTNode.NodeState.SUCCESS)
+        {
+            health += 50;
+        }
+        return s;
     }
 
     public BTNode.NodeState GoToFreeSpace(GameObject space)
@@ -84,31 +84,26 @@ public class NPCBehaviour : MonoBehaviour
             return s;
     }
 
-    BTNode.NodeState GoToLocation(Vector3 location)
-    {
-        float distanceToLocation = Vector3.Distance(location, this.transform.position);
-        if (state == ActionState.IDLE)
-        {
-            state = ActionState.WORKING;
-            agent.SetDestination(location);
-        }
-        else if (Vector3.Distance(agent.pathEndPosition, location) >= 2)
-        {
-            state = ActionState.IDLE;
-            return BTNode.NodeState.FAILURE;
-        }
-        else if (distanceToLocation <= 2)
-        {
-            state = ActionState.IDLE;
-            return BTNode.NodeState.SUCCESS;
-        }
-        return BTNode.NodeState.RUNNING;
-    }
+    //BTNode.NodeState GoToLocation(Vector3 location)
+    //{
+    //    float distanceToLocation = Vector3.Distance(location, this.transform.position);
+    //    if (state == ActionState.IDLE)
+    //    {
+    //        state = ActionState.WORKING;
+    //        agent.SetDestination(location);
+    //    }
+    //    else if (Vector3.Distance(agent.pathEndPosition, location) >= 2)
+    //    {
+    //        state = ActionState.IDLE;
+    //        return BTNode.NodeState.FAILURE;
+    //    }
+    //    else if (distanceToLocation <= 2)
+    //    {
+    //        state = ActionState.IDLE;
+    //        return BTNode.NodeState.SUCCESS;
+    //    }
+    //    return BTNode.NodeState.RUNNING;
+    //}
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (treeState != BTNode.NodeState.SUCCESS)
-            treeState = tree.Process();
-    }
+
 }

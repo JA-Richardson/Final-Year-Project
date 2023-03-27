@@ -370,7 +370,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 52336857}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 94.96, y: 2.1, z: 77.35}
+  m_LocalPosition: {x: 94.96, y: 0, z: 77.35}
   m_LocalScale: {x: 1.66, y: 1.66, z: 1.66}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1885,6 +1885,7 @@ GameObject:
   - component: {fileID: 1292675070}
   - component: {fileID: 1292675069}
   - component: {fileID: 1292675068}
+  - component: {fileID: 1292675073}
   m_Layer: 0
   m_Name: Capsule (2)
   m_TagString: Untagged
@@ -1984,6 +1985,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!208 &1292675073
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292675067}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 0
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1363916347 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1244365876284636, guid: aeda6427aba4b134393f10008643e173, type: 3}
@@ -2354,9 +2371,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cb25fa7326f15e458684d0717b23745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 0}
+  state: 0
   goal: {fileID: 1170394678}
   home: {fileID: 52336857}
   goal2: {fileID: 1292675067}
+  health: 75
 --- !u!195 &2123721605
 NavMeshAgent:
   m_ObjectHideFlags: 0
