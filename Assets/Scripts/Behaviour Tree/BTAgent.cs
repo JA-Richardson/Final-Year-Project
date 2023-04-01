@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Rendering;
 
 public class BTAgent : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class BTAgent : MonoBehaviour
 
    
     WaitForSeconds waitForSeconds;
+    Vector3 lastLocation;
 
   
     public void Start()
@@ -28,6 +30,33 @@ public class BTAgent : MonoBehaviour
         StartCoroutine(Behave());
     }
 
+    public BTNode.NodeState CanSee(Vector3 target, string tag, float distance, float maxAngle)
+    {
+        Vector3 directionToTarget = target - this.transform.position;
+        float angle = Vector3.Angle(directionToTarget, this.transform.forward);
+
+        if(angle <= maxAngle && directionToTarget.magnitude <= distance)
+        {
+            RaycastHit hitInfo;
+            if(Physics.Raycast(this.transform.position, directionToTarget, out hitInfo))
+            {
+                if(hitInfo.collider.gameObject.CompareTag(tag))
+                {
+                    return BTNode.NodeState.SUCCESS;
+                }
+            }
+        }
+        return BTNode.NodeState.FAILURE;
+    }
+
+    public BTNode.NodeState Flee(Vector3 location, float distance)
+    {
+        if (state == ActionState.IDLE)
+        {
+            lastLocation = this.transform.position + (transform.position - location).normalized * distance;
+        }
+            return GoToLocation(lastLocation);
+    }
     // Method to move the agent to a specified location
     public BTNode.NodeState GoToLocation(Vector3 location)
     {
