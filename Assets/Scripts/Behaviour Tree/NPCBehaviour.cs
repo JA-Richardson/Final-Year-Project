@@ -8,7 +8,7 @@ using UnityEngine.XR;
 public class NPCBehaviour : BTAgent
 {
     public GameObject home;
-    public GameObject[] spaces;
+    public GameObject[] loot;
     public GameObject enemy;
 
     [Range(0, 100)]
@@ -23,9 +23,9 @@ public class NPCBehaviour : BTAgent
         BTLeaf goToHome = new BTLeaf("Go To Home", GoToHome);
         BTRandomSelector chooseGoal = new BTRandomSelector("Choose Goal");
 
-        for (int i = 0; i < spaces.Length; i++)
+        for (int i = 0; i < loot.Length; i++)
         {
-            BTLeaf goToPos = new BTLeaf("Go To Position" + spaces[i].name, i, GoToPosition);
+            BTLeaf goToPos = new BTLeaf("Go To Position" + loot[i].name, i, GoToPosition);
             chooseGoal.AddChild(goToPos);
         }
 
@@ -76,7 +76,7 @@ public class NPCBehaviour : BTAgent
     
     public BTNode.NodeState GoToPosition(int i)
     {
-        BTNode.NodeState s = GoToLocation(spaces[i].transform.position);
+        BTNode.NodeState s = GoToLocation(loot[i].transform.position);
         if (s == BTNode.NodeState.SUCCESS)
         {
             return BTNode.NodeState.SUCCESS;
