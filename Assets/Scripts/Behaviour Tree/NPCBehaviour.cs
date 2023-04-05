@@ -10,6 +10,8 @@ public class NPCBehaviour : BTAgent
     public GameObject home;
     public GameObject[] loot;
     public GameObject enemy;
+    public GameObject crown;
+    public GameObject pickup;
 
     [Range(0, 100)]
     public int health = 75;
@@ -21,7 +23,12 @@ public class NPCBehaviour : BTAgent
         BTSequence move = new("Move");
         BTLeaf hasHealth = new BTLeaf("Has Health", HasHealth);
         BTLeaf goToHome = new BTLeaf("Go To Home", GoToHome);
+        BTLeaf goToCrown = new BTLeaf("Go To Crown", GoToCrown);
         BTRandomSelector chooseGoal = new BTRandomSelector("Choose Goal");
+        BTSelector moveOrRun = new BTSelector("Move or run");
+        BTSequence runAway = new BTSequence("Run Away");
+        BTLeaf canSee = new BTLeaf("Can see enemy?", CanSeeEnemy);
+        BTLeaf flee = new BTLeaf("Run away", FleeFromEnemy);
 
         for (int i = 0; i < loot.Length; i++)
         {
@@ -31,25 +38,19 @@ public class NPCBehaviour : BTAgent
 
         BTInverter invertHealth = new("Invert Health");
         invertHealth.AddChild(hasHealth);
-        // BTInverter cantSeeEnemy = new BTInverter("Can't see");
-        //cantSeeEnemy.AddChild(cantSeeEnemy);
+        BTInverter cantSeeEnemy = new BTInverter("Can't see");
+        cantSeeEnemy.AddChild(canSee);
 
         move.AddChild(invertHealth);
-     //   move.AddChild(cantSeeEnemy);
+        move.AddChild(cantSeeEnemy);
         move.AddChild(chooseGoal);
-       // move.AddChild(cantSeeEnemy);
+        move.AddChild(cantSeeEnemy);
         move.AddChild(goToHome);
-
-        tree.PrintTree();
-
-        BTSequence runAway = new BTSequence("Run Away");
-        BTLeaf canSee = new BTLeaf("Can see enemy?", CanSeeEnemy);
-        BTLeaf flee = new BTLeaf("Run away", FleeFromEnemy);
 
         runAway.AddChild(canSee);
         runAway.AddChild(flee);
 
-        BTSelector moveOrRun = new BTSelector("Move or run");
+        
         moveOrRun.AddChild(move);
         moveOrRun.AddChild(runAway);
 
@@ -72,6 +73,20 @@ public class NPCBehaviour : BTAgent
         if(health < 50)
             return BTNode.NodeState.FAILURE;
         return BTNode.NodeState.SUCCESS;
+    }
+
+    public BTNode.NodeState GoToCrown()
+    {
+        if (!crown.activeSelf)
+            return BTNode.NodeState.FAILURE;
+        BTNode.NodeState s = GoToLocation(crown.transform.position);
+        if (s == BTNode.NodeState.SUCCESS)
+        {
+            crown.transform.parent = this.gameObject.transform;
+            pickup = crown;
+            
+        }
+        return s;
     }
     
     public BTNode.NodeState GoToPosition(int i)
