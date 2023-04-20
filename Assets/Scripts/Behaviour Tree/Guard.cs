@@ -7,7 +7,7 @@ public class Guard : BTAgent
     public GameObject[] patrolPath;
     public GameObject thief;
     // Start is called before the first frame update
-    new void Start()
+    public override void Start()
     {
         base.Start();
 

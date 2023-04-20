@@ -8,7 +8,7 @@ public class BTWorker : BTAgent
     public GameObject booth;
     public GameObject crowd;
     // Start is called before the first frame update
-    new void Start()
+    public override void Start()
     {
         base.Start();
         BTLeaf allocateCustomer = new("Allocate customer", AllocateCustomer);

@@ -20,7 +20,7 @@ public class BTAgent : MonoBehaviour
     Vector3 lastLocation;
 
 
-    public void Start()
+    public virtual void Start()
     {
         agent = this.GetComponent<NavMeshAgent>();
         tree = new BehaviourTree("Behaviour Tree");

@@ -15,7 +15,7 @@ public class CrowdBehaviour : BTAgent
     public bool ticket = false;
     public bool isWaiting = false;
 
-    new void Start()
+    public override void Start()
     {
         base.Start();
 

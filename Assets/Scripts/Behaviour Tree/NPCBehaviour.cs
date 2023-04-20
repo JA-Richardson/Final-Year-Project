@@ -12,7 +12,7 @@ public class NPCBehaviour : BTAgent
     public int health = 75;
 
     // Start is called before the first frame update
-    new void Start()
+    public override void Start()
     {
         base.Start();
 
