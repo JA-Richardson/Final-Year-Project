@@ -8,6 +8,7 @@ TagManager:
   - AI
   - PatrolPoint
   - Safe
+  - Thief
   layers:
   - Default
   - TransparentFX

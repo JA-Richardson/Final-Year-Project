@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -33,7 +32,7 @@ public class BehaviourTree : BTNode
     // Function to print out the behaviour tree structure
     public void PrintTree()
     {
-  
+
         string treePrintout = "";
         // Define a stack to hold the current node and its level
         Stack<BTNodeLevel> stack = new Stack<BTNodeLevel>();

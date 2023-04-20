@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class BTInverter : BTNode
 {
     public BTInverter(string name)
@@ -13,7 +9,7 @@ public class BTInverter : BTNode
     public override NodeState Process()
     {
         // Get the current state of the child node
-        NodeState childState = children[currentChild].Process();
+        NodeState childState = children[0].Process();
 
         // If the child node is running, return running
         if (childState == NodeState.RUNNING)

@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System.Diagnostics;
 
 public class BTLeaf : BTNode
 {
@@ -52,10 +50,14 @@ public class BTLeaf : BTNode
     // If the node is a multi-state node, its state is determined by calling its MultiStateMethod with the specified index
     public override NodeState Process()
     {
+        BTNode.NodeState s;
         if (StateMethod != null)
-            return StateMethod();
+            s = StateMethod();
         else if (MultiStateMethod != null)
-            return MultiStateMethod(index);
-        return NodeState.FAILURE;
+            s = MultiStateMethod(index);
+        else
+            s = NodeState.FAILURE;
+        UnityEngine.Debug.Log(nodeName + " " + s);
+        return s;
     }
 }

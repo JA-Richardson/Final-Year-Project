@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class BTNode
 {
@@ -38,6 +36,15 @@ public class BTNode
     public void AddChild(BTNode child)
     {
         children.Add(child);
+    }
+
+    public void Reset()
+    {
+        foreach (BTNode child in children)
+        {
+            child.Reset();
+        }
+        currentChild = 0;
     }
 }
 

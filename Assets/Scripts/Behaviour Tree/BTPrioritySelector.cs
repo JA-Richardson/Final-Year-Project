@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 
 public class BTPrioritySelector : BTNode
 {
@@ -46,16 +43,16 @@ public class BTPrioritySelector : BTNode
         // If the current child node succeeded in processing, set its sortPriority to 1, reset the currentChild variable to 0, and return a NodeState of "SUCCESS"
         if (childState == NodeState.SUCCESS)
         {
-            children[currentChild].sortPriority = 1;
+            //children[currentChild].sortPriority = 1;
             currentChild = 0;
             ordered = false;
             return NodeState.SUCCESS;
         }
-        else
-        {
-            // If the current child node failed in processing, set its sortPriority to 10 and move on to the next child node
-            children[currentChild].sortPriority = 10;
-        }
+        //else
+        //{
+        //    // If the current child node failed in processing, set its sortPriority to 10 and move on to the next child node
+        //    children[currentChild].sortPriority = 10;
+        //}
         currentChild++;
 
         // If all child nodes have been processed, reset the currentChild variable to 0, set ordered to false, and return a NodeState of "FAILURE"

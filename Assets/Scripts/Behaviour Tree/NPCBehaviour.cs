@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.XR;
 //Still needs commenting, do not forget
 public class NPCBehaviour : BTAgent
 {
@@ -20,16 +15,19 @@ public class NPCBehaviour : BTAgent
     new void Start()
     {
         base.Start();
-        BTSequence move = new("Move");
+
         BTLeaf hasHealth = new BTLeaf("Has Health", HasHealth);
         BTLeaf goToHome = new BTLeaf("Go To Home", GoToHome);
+        BTLeaf goToHome2 = new BTLeaf("Go To Home2", GoToHome);
         BTLeaf goToCrown = new BTLeaf("Go To Crown", GoToCrown);
-        BTRandomSelector chooseGoal = new BTRandomSelector("Choose Goal");
-        BTSelector moveOrRun = new BTSelector("Move or run");
-        BTSequence runAway = new BTSequence("Run Away");
         BTLeaf canSee = new BTLeaf("Can see enemy?", CanSeeEnemy);
         BTLeaf flee = new BTLeaf("Run away", FleeFromEnemy);
+        BTLeaf isOpen = new("is open", IsOpen);
+        BTInverter isClosed = new("is closed");
+        isClosed.AddChild(isOpen);
 
+
+        BTRandomSelector chooseGoal = new BTRandomSelector("Choose Goal");
         for (int i = 0; i < loot.Length; i++)
         {
             BTLeaf goToPos = new BTLeaf("Go To Position" + loot[i].name, i, GoToPosition);
@@ -41,17 +39,28 @@ public class NPCBehaviour : BTAgent
         BTInverter cantSeeEnemy = new BTInverter("Can't see");
         cantSeeEnemy.AddChild(canSee);
 
-        move.AddChild(invertHealth);
-        move.AddChild(cantSeeEnemy);
+        BehaviourTree moveConditions = new BehaviourTree();
+        BTSequence conditions = new("Move coniditions");
+        conditions.AddChild(isClosed);
+        conditions.AddChild(cantSeeEnemy);
+        conditions.AddChild(invertHealth);
+        moveConditions.AddChild(conditions);
+
+        BTDependencySequence move = new("Move", moveConditions, agent);
         move.AddChild(chooseGoal);
-        move.AddChild(cantSeeEnemy);
+        move.AddChild(goToCrown);
         move.AddChild(goToHome);
 
+        BTSequence runAway = new BTSequence("Run Away");
         runAway.AddChild(canSee);
         runAway.AddChild(flee);
-
         
-        moveOrRun.AddChild(move);
+        BTSelector grabOrLeave = new BTSelector("Grab or Leave");
+        grabOrLeave.AddChild(move);
+        grabOrLeave.AddChild(goToHome);
+
+        BTSelector moveOrRun = new BTSelector("Move or run");
+        moveOrRun.AddChild(grabOrLeave);
         moveOrRun.AddChild(runAway);
 
         tree.AddChild(moveOrRun);
@@ -62,7 +71,7 @@ public class NPCBehaviour : BTAgent
     {
         return CanSee(enemy.transform.position, "Player", 10, 90);
     }
-    
+
     public BTNode.NodeState FleeFromEnemy()
     {
         return Flee(enemy.transform.position, 10);
@@ -70,7 +79,7 @@ public class NPCBehaviour : BTAgent
 
     public BTNode.NodeState HasHealth()
     {
-        if(health < 50)
+        if (health < 50)
             return BTNode.NodeState.FAILURE;
         return BTNode.NodeState.SUCCESS;
     }
@@ -84,11 +93,11 @@ public class NPCBehaviour : BTAgent
         {
             crown.transform.parent = this.gameObject.transform;
             pickup = crown;
-            
+
         }
         return s;
     }
-    
+
     public BTNode.NodeState GoToPosition(int i)
     {
         BTNode.NodeState s = GoToLocation(loot[i].transform.position);
@@ -103,9 +112,15 @@ public class NPCBehaviour : BTAgent
     public BTNode.NodeState GoToHome()
     {
         BTNode.NodeState s = GoToLocation(home.transform.position);
-        if(s == BTNode.NodeState.SUCCESS)
+        if (s == BTNode.NodeState.SUCCESS)
         {
-            health += 50;
+            if (pickup != null)
+            {
+                health += 50;
+                pickup.SetActive(false);
+                pickup = null;
+            }
+            
         }
         return s;
     }

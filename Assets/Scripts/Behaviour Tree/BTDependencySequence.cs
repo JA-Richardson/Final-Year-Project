@@ -1,21 +1,23 @@
-public class BTSequence : BTNode
+using UnityEngine.AI;
+
+public class BTDependencySequence : BTNode
 {
-    public BTSequence(string name)
+    BehaviourTree DependencyTree;
+    NavMeshAgent agent;
+    public BTDependencySequence(string name, BehaviourTree tree, NavMeshAgent navAgent)
+
     {
         nodeName = name;
+        DependencyTree = tree;
+        agent = navAgent;
     }
 
     // An overridden method of the BTNode class which returns the state of the current node
     public override NodeState Process()
     {
-        // Get the state of the current child node
-        NodeState childState = children[currentChild].Process();
-
-        // If the child node is still running, return running state
-        if (childState == NodeState.RUNNING) return NodeState.RUNNING;
-        if (childState == NodeState.FAILURE)
+        if (DependencyTree.Process() == NodeState.FAILURE)
         {
-            currentChild = 0;
+            agent.ResetPath();
             foreach (BTNode child in children)
             {
                 child.Reset();
@@ -23,8 +25,15 @@ public class BTSequence : BTNode
             return NodeState.FAILURE;
         }
 
-        //// If the child node fails, return failure state
-        //if (childState == NodeState.FAILURE) return childState;
+
+        // Get the state of the current child node
+        NodeState childState = children[currentChild].Process();
+
+        // If the child node is still running, return running state
+        if (childState == NodeState.RUNNING) return NodeState.RUNNING;
+
+        // If the child node fails, return failure state
+        if (childState == NodeState.FAILURE) return childState;
 
         // If the child node succeeds, move on to the next child node
         currentChild++;
