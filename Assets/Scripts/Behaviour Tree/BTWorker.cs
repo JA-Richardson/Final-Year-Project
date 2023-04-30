@@ -43,7 +43,7 @@ public class BTWorker : BTAgent
         BTNode.NodeState s = GoToLocation(crowd.transform.position);
         if (s == BTNode.NodeState.SUCCESS)
         {
-            crowd.GetComponent<CrowdBehaviour>().ticket = true;
+            crowd.GetComponent<CrowdBehaviour>().entryAllowed = true;
             crowd = null;
            
         }

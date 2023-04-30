@@ -5,25 +5,25 @@ using UnityEngine.AI;
 
 public class CrowdBehaviour : BTAgent
 {
-    public GameObject[] art;
+    public GameObject[] shelf;
     public GameObject door;
     public GameObject home;
 
     [Range(0, 1000)]
-    public int bored = 1000;
+    public int hunger = 1000;
 
-    public bool ticket = false;
+    public bool entryAllowed = false;
     public bool isWaiting = false;
 
     public override void Start()
     {
         base.Start();
 
-        BTRandomSelector chooseArt = new BTRandomSelector("Choose Goal");
-        for (int i = 0; i < art.Length; i++)
+        BTRandomSelector chooseShelf = new BTRandomSelector("Choose Goal");
+        for (int i = 0; i < shelf.Length; i++)
         {
-            BTLeaf goToPos = new BTLeaf("Go To Position" + art[i].name, i, GoToArt);
-            chooseArt.AddChild(goToPos);
+            BTLeaf goToPos = new BTLeaf("Go To Position" + shelf[i].name, i, GoToArt);
+            chooseShelf.AddChild(goToPos);
         }
 
         BTLeaf goToDoor = new("Go To Door", GoToDoor);
@@ -36,12 +36,12 @@ public class CrowdBehaviour : BTAgent
         move.AddChild(isBored);
         move.AddChild(goToDoor);
 
-        BTLeaf noTicket = new("Get Ticket", NoTicket);
+        BTLeaf notChecked = new("Wait to be checked", NotChecked);
         BTLeaf isWaiting = new("Wait for worker", IsWaiting);
 
-        BehaviourTree buyTicket = new();
-        buyTicket.AddChild(noTicket);
-        BTLoop getTicket = new("Getting ticket", buyTicket);
+        BehaviourTree waitForCheck = new();
+        waitForCheck.AddChild(notChecked);
+        BTLoop getTicket = new("Getting ticket", waitForCheck);
         getTicket.AddChild(isWaiting);
 
         move.AddChild(getTicket);
@@ -50,7 +50,7 @@ public class CrowdBehaviour : BTAgent
         whileBored.AddChild(isBored);
 
         BTLoop looking = new("Loop", whileBored);
-        looking.AddChild(chooseArt);
+        looking.AddChild(chooseShelf);
         move.AddChild(looking);
         move.AddChild(goToHome);
 
@@ -68,21 +68,21 @@ public class CrowdBehaviour : BTAgent
         StartCoroutine("increasedBored");
     }
 
-    IEnumerator increasedBored()
+    IEnumerator increaseHunger()
     {
         while(true)
         {
-            bored = Mathf.Clamp(bored + 20, 0, 1000);
+            hunger = Mathf.Clamp(hunger + 20, 0, 1000);
             yield return new WaitForSeconds(Random.Range(1, 5));
         }
     }
 
     public BTNode.NodeState GoToArt(int i)
     {
-        BTNode.NodeState s = GoToLocation(art[i].transform.position);
+        BTNode.NodeState s = GoToLocation(shelf[i].transform.position);
         if (s == BTNode.NodeState.SUCCESS)
         {
-            bored = Mathf.Clamp(bored - 150, 0, 1000);
+            hunger = Mathf.Clamp(hunger - 150, 0, 1000);
             return BTNode.NodeState.SUCCESS;
             
         }
@@ -115,7 +115,7 @@ public class CrowdBehaviour : BTAgent
 
     public BTNode.NodeState IsBored()
     {
-        if (bored < 200)
+        if (hunger < 200)
         {
             return BTNode.NodeState.FAILURE;
         }
@@ -123,9 +123,9 @@ public class CrowdBehaviour : BTAgent
             return BTNode.NodeState.SUCCESS;
     }
 
-   public BTNode.NodeState NoTicket()
+   public BTNode.NodeState NotChecked()
     {
-        if (ticket || IsOpen() == BTNode.NodeState.FAILURE)
+        if (entryAllowed || IsOpen() == BTNode.NodeState.FAILURE)
         {
             return BTNode.NodeState.FAILURE;
         }

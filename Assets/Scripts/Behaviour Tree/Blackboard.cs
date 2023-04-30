@@ -10,8 +10,8 @@ public class Blackboard : MonoBehaviour
     public float timeOfDay;
     public Text clock;
     public Stack<GameObject> crowd = new();
-    public int openTime = 6;
-    public int closeTime = 22;
+    public float openTime = 6f;
+    public float closeTime = 22f;
 
     static Blackboard instance;
     public static Blackboard Instance
@@ -45,16 +45,16 @@ public class Blackboard : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine("UpdateTime");
+        StartCoroutine(nameof(UpdateTime));
     }
 
     IEnumerator UpdateTime()
     {
         while(true)
         {
-            timeOfDay++;
-            if (timeOfDay > 23)
-                timeOfDay = 0;
+            timeOfDay+=0.1f;
+            if (timeOfDay > 23f)
+                timeOfDay = 0f;
             clock.text = timeOfDay + ":00";
             if(timeOfDay == closeTime)
                 crowd.Clear();
