@@ -24,7 +24,7 @@ public class BTAgent : MonoBehaviour
         
         agent = this.GetComponent<NavMeshAgent>();
         tree = new BehaviourTree("Behaviour Tree");
-        waitForSeconds = new WaitForSeconds(Random.Range(0.1f, 1f));
+        waitForSeconds = new WaitForSeconds(Random.Range(1, 5));
         StartCoroutine(Behave());
     }
     //Method to check if the agent can see a target
@@ -111,6 +111,11 @@ public class BTAgent : MonoBehaviour
             // Wait for the specified amount of time before continuing to execute the coroutine
             yield return waitForSeconds;
         }
+    }
+
+    public void Wait()
+    {
+        return;
     }
 
 }

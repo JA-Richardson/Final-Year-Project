@@ -53,7 +53,7 @@ public class Blackboard : MonoBehaviour
     {
         while (true)
         {
-            timeOfDay += 0.1f;
+            timeOfDay += 0.2f;
             if (timeOfDay > 23f)
                 timeOfDay = 0f;
             clock.text = timeOfDay + ":00";

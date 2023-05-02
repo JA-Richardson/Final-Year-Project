@@ -88,7 +88,6 @@ public class CrowdBehaviour : BTAgent
             BTNode.NodeState s = GoToLocation(checkout.transform.position);
             if (s == BTNode.NodeState.SUCCESS)
             {
-                new WaitForSeconds(Random.Range(10f, 20f));
                 shelfIndex = 0;
                 hunger = 0;
                 return BTNode.NodeState.SUCCESS;

@@ -525,8 +525,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -415.06754, y: 436.56213}
-  m_SizeDelta: {x: -830.1351, y: -873.1242}
+  m_AnchoredPosition: {x: -345.03156, y: 444.75342}
+  m_SizeDelta: {x: -690.0632, y: -889.5068}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &57788182
 MonoBehaviour:
@@ -1123,7 +1123,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1394,7 +1394,7 @@ MonoBehaviour:
   door: {fileID: 1232358258}
   home: {fileID: 102583556}
   checkout: {fileID: 1798136974}
-  shelfIndex: 0
+  shelfIndex: 4
   hunger: 1000
   entryAllowed: 0
   isWaiting: 0
@@ -1408,7 +1408,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -2282,7 +2282,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -2625,7 +2625,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -4402,7 +4402,7 @@ MonoBehaviour:
   door: {fileID: 1232358258}
   home: {fileID: 102583556}
   checkout: {fileID: 1798136974}
-  shelfIndex: 0
+  shelfIndex: 4
   hunger: 1000
   entryAllowed: 0
   isWaiting: 0
@@ -4416,7 +4416,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -5870,7 +5870,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 4
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -7509,7 +7509,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -8136,7 +8136,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -8803,7 +8803,7 @@ MonoBehaviour:
   door: {fileID: 1232358258}
   home: {fileID: 102583556}
   checkout: {fileID: 1798136974}
-  shelfIndex: 0
+  shelfIndex: 4
   hunger: 1000
   entryAllowed: 0
   isWaiting: 0
@@ -8817,7 +8817,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -9095,7 +9095,7 @@ MonoBehaviour:
   door: {fileID: 1232358258}
   home: {fileID: 102583556}
   checkout: {fileID: 1798136974}
-  shelfIndex: 0
+  shelfIndex: 3
   hunger: 1000
   entryAllowed: 0
   isWaiting: 0
@@ -9109,7 +9109,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -9576,7 +9576,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -10324,7 +10324,7 @@ MonoBehaviour:
   door: {fileID: 1232358258}
   home: {fileID: 102583556}
   checkout: {fileID: 1798136974}
-  shelfIndex: 0
+  shelfIndex: 4
   hunger: 1000
   entryAllowed: 0
   isWaiting: 0
@@ -10338,7 +10338,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -11063,7 +11063,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 3
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -11155,7 +11155,7 @@ MonoBehaviour:
   door: {fileID: 1232358258}
   home: {fileID: 102583556}
   checkout: {fileID: 1798136974}
-  shelfIndex: 0
+  shelfIndex: 4
   hunger: 1000
   entryAllowed: 0
   isWaiting: 0
@@ -11169,7 +11169,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -11593,7 +11593,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -12290,7 +12290,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 6
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -12372,7 +12372,7 @@ MonoBehaviour:
   door: {fileID: 1232358258}
   home: {fileID: 102583556}
   checkout: {fileID: 1798136974}
-  shelfIndex: 0
+  shelfIndex: 1
   hunger: 1000
   entryAllowed: 0
   isWaiting: 0
