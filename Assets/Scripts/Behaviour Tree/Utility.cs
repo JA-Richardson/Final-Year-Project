@@ -2,7 +2,8 @@ using System.Collections.Generic;
 
 public static class Utility
 {
-    public static System.Random r = new System.Random();
+    public static System.Random r = new();
+    // Method to shuffle a list
     public static void Shuffle<T>(this IList<T> list)
     {
         int n = list.Count;
@@ -10,9 +11,7 @@ public static class Utility
         {
             n--;
             int k = r.Next(n + 1);
-            T value = list[k];
-            list[k] = list[n];
-            list[n] = value;
+            (list[n], list[k]) = (list[k], list[n]);
         }
     }
 }

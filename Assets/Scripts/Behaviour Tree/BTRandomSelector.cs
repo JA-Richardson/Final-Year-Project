@@ -2,7 +2,7 @@ public class BTRandomSelector : BTNode
 {
     // Keep track of whether the children have been shuffled
     bool shuffled = false;
-
+    
     public BTRandomSelector(string name) : base(name)
     {
         nodeName = name;

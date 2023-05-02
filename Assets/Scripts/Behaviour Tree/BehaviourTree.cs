@@ -30,12 +30,17 @@ public class BehaviourTree : BTNode
     }
 
     // Function to print out the behaviour tree structure
+    // Used for debugging purposes
+    // Prints out the name of each node in the tree with the correct indentation
+    // The indentation is based on the level of the node in the tree
+    // The root node is level 0, its children are level 1, and so on
+    // Uses a stack to store the current node and its level
     public void PrintTree()
     {
 
         string treePrintout = "";
         // Define a stack to hold the current node and its level
-        Stack<BTNodeLevel> stack = new Stack<BTNodeLevel>();
+        Stack<BTNodeLevel> stack = new();
         // Set the current node to the root node of the behaviour tree
         BTNode currentNode = this;
         stack.Push(new BTNodeLevel { level = 0, node = currentNode });

@@ -1,39 +1,41 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class CrowdBehaviour : BTAgent
 {
     public GameObject[] shelf;
     public GameObject door;
     public GameObject home;
+    public GameObject checkout;
+    public int shelfIndex = 0;
 
     [Range(0, 1000)]
-    public int hunger = 1000;
+    public int hunger = 0;
 
     public bool entryAllowed = false;
     public bool isWaiting = false;
-
+    
     public override void Start()
     {
         base.Start();
 
-        BTRandomSelector chooseShelf = new BTRandomSelector("Choose Goal");
+        BTRandomSelector chooseShelf = new("Choose Goal");
         for (int i = 0; i < shelf.Length; i++)
         {
-            BTLeaf goToPos = new BTLeaf("Go To Position" + shelf[i].name, i, GoToArt);
+            BTLeaf goToPos = new("Go To Position" + shelf[i].name, i, GoToShelf);
             chooseShelf.AddChild(goToPos);
+            
         }
 
         BTLeaf goToDoor = new("Go To Door", GoToDoor);
         BTLeaf goToHome = new("Go To Home", GoToHome);
-        BTLeaf isBored = new("Bored", IsBored);
+        BTLeaf isHungry = new("Hungry", IsHungry);
         BTLeaf isOpen = new("Open", IsOpen);
+        BTLeaf checkout = new("Checkout", Checkout);
 
         BTSequence move = new("Move");
         move.AddChild(isOpen);
-        move.AddChild(isBored);
+        move.AddChild(isHungry);
         move.AddChild(goToDoor);
 
         BTLeaf notChecked = new("Wait to be checked", NotChecked);
@@ -46,45 +48,69 @@ public class CrowdBehaviour : BTAgent
 
         move.AddChild(getTicket);
 
-        BehaviourTree whileBored = new();
-        whileBored.AddChild(isBored);
+        BehaviourTree whileHungry = new();
+        whileHungry.AddChild(isHungry);
 
-        BTLoop looking = new("Loop", whileBored);
+        BTLoop looking = new("Loop", whileHungry);
         looking.AddChild(chooseShelf);
+        
         move.AddChild(looking);
+        move.AddChild(checkout);
         move.AddChild(goToHome);
 
         BehaviourTree areaOpen = new();
         areaOpen.AddChild(isOpen);
 
-        BTDependencySequence viewArt = new("View Art", areaOpen, agent);
-        viewArt.AddChild(move);
+        BTDependencySequence viewProduce = new("View Produce", areaOpen, agent);
+        viewProduce.AddChild(move);
 
-        BTSelector viewWithFallback = new("View With Fallback");
-        viewWithFallback.AddChild(viewArt);
-        viewWithFallback.AddChild(goToHome);
+        BTSelector fallback = new("Fallback");
+        fallback.AddChild(viewProduce);
+        fallback.AddChild(goToHome);
 
-        tree.AddChild(viewWithFallback);
-        StartCoroutine("increasedBored");
+        tree.AddChild(fallback);
+        StartCoroutine(nameof(IncreaseHunger));
     }
-
-    IEnumerator increaseHunger()
+    // Coroutine to increase hunger
+    IEnumerator IncreaseHunger()
     {
-        while(true)
+        while (true)
         {
-            hunger = Mathf.Clamp(hunger + 20, 0, 1000);
+            hunger = Mathf.Clamp(hunger + 10, 0, 1000);
             yield return new WaitForSeconds(Random.Range(1, 5));
         }
     }
-
-    public BTNode.NodeState GoToArt(int i)
+    //If the agent has visited 5 or more shelves they will go to the checkout
+    public BTNode.NodeState Checkout()
+    {
+        if (shelfIndex >= 5)
+        {
+            BTNode.NodeState s = GoToLocation(checkout.transform.position);
+            if (s == BTNode.NodeState.SUCCESS)
+            {
+                new WaitForSeconds(Random.Range(10f, 20f));
+                shelfIndex = 0;
+                hunger = 0;
+                return BTNode.NodeState.SUCCESS;
+            }
+            else
+                return s;
+        }
+        else
+        {
+            return BTNode.NodeState.FAILURE;
+        }
+    }
+    
+    public BTNode.NodeState GoToShelf(int i)
     {
         BTNode.NodeState s = GoToLocation(shelf[i].transform.position);
         if (s == BTNode.NodeState.SUCCESS)
         {
-            hunger = Mathf.Clamp(hunger - 150, 0, 1000);
+            hunger = Mathf.Clamp(hunger - 200, 0, 1000);
+            shelfIndex++;
             return BTNode.NodeState.SUCCESS;
-            
+
         }
         else
             return s;
@@ -113,7 +139,7 @@ public class CrowdBehaviour : BTAgent
             return s;
     }
 
-    public BTNode.NodeState IsBored()
+    public BTNode.NodeState IsHungry()
     {
         if (hunger < 200)
         {
@@ -122,9 +148,10 @@ public class CrowdBehaviour : BTAgent
         else
             return BTNode.NodeState.SUCCESS;
     }
-
-   public BTNode.NodeState NotChecked()
+    //Agent waits to be allowed entry to the store
+    public BTNode.NodeState NotChecked()
     {
+        
         if (entryAllowed || IsOpen() == BTNode.NodeState.FAILURE)
         {
             return BTNode.NodeState.FAILURE;

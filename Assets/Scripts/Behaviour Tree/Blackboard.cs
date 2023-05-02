@@ -14,16 +14,17 @@ public class Blackboard : MonoBehaviour
     public float closeTime = 22f;
 
     static Blackboard instance;
+    // Singleton instance of the blackboard
     public static Blackboard Instance
     {
-        get 
-        { 
+        get
+        {
             if (!instance)
             {
                 Blackboard[] blackboards = GameObject.FindObjectsOfType<Blackboard>();
-                if(blackboards != null)
+                if (blackboards != null)
                 {
-                    if(blackboards.Length ==1)
+                    if (blackboards.Length == 1)
                     {
                         instance = blackboards[0];
                         return instance;
@@ -41,35 +42,32 @@ public class Blackboard : MonoBehaviour
             instance = value as Blackboard;
         }
     }
-    
+
     // Start is called before the first frame update
     void Start()
     {
         StartCoroutine(nameof(UpdateTime));
     }
-
+    // Coroutine to update the time of day
     IEnumerator UpdateTime()
     {
-        while(true)
+        while (true)
         {
-            timeOfDay+=0.1f;
+            timeOfDay += 0.1f;
             if (timeOfDay > 23f)
                 timeOfDay = 0f;
             clock.text = timeOfDay + ":00";
-            if(timeOfDay == closeTime)
+            if (timeOfDay == closeTime)
                 crowd.Clear();
             yield return new WaitForSeconds(1);
         }
     }
-
+    // Register a customer to the crowd
     public bool RegisterCustomer(GameObject c)
     {
         crowd.Push(c);
         return true;
     }
 
-    //public void DeregisterCustomer()
-    //{
-    //    crowd = null;
-    //}
+    
 }

@@ -2,8 +2,8 @@ using UnityEngine.AI;
 
 public class BTDependencySequence : BTNode
 {
-    BehaviourTree DependencyTree;
-    NavMeshAgent agent;
+    readonly BehaviourTree DependencyTree;
+    readonly NavMeshAgent agent;
     public BTDependencySequence(string name, BehaviourTree tree, NavMeshAgent navAgent)
 
     {
@@ -15,6 +15,7 @@ public class BTDependencySequence : BTNode
     // An overridden method of the BTNode class which returns the state of the current node
     public override NodeState Process()
     {
+        // If the dependancy tree fails, reset the path and return failure
         if (DependencyTree.Process() == NodeState.FAILURE)
         {
             agent.ResetPath();

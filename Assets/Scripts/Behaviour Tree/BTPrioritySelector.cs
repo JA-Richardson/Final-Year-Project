@@ -48,11 +48,7 @@ public class BTPrioritySelector : BTNode
             ordered = false;
             return NodeState.SUCCESS;
         }
-        //else
-        //{
-        //    // If the current child node failed in processing, set its sortPriority to 10 and move on to the next child node
-        //    children[currentChild].sortPriority = 10;
-        //}
+        
         currentChild++;
 
         // If all child nodes have been processed, reset the currentChild variable to 0, set ordered to false, and return a NodeState of "FAILURE"
@@ -83,16 +79,11 @@ public class BTPrioritySelector : BTNode
             {
                 lowIndex++;
 
-                BTNode temp = array[lowIndex];
-                array[lowIndex] = array[j];
-                array[j] = temp;
+                (array[j], array[lowIndex]) = (array[lowIndex], array[j]);
             }
         }
 
-        BTNode temp1 = array[lowIndex + 1];
-        array[lowIndex + 1] = array[high];
-        array[high] = temp1;
-
+        (array[high], array[lowIndex + 1]) = (array[lowIndex + 1], array[high]);
         return lowIndex + 1;
     }
 

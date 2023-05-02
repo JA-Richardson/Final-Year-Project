@@ -1,19 +1,12 @@
-using System.Diagnostics;
-
 public class BTLeaf : BTNode
 {
-    // Define a delegate for the state of the node
-    // This delegate will be called to determine the state of the node
+    // Define a delegate for the state of the node, this delegate will be called to determine the state of the node
     public delegate NodeState Tick();
-    // Define the method for the state of the node
-    // This method will be called to determine the state of the node
+    // Define the method for the state of the node, this method will be called to determine the state of the node
     public Tick StateMethod;
-
-    // Define a delegate for multi-state node
-    // This delegate will be called to determine the state of the node based on the specified index
+    // Define a delegate for multi-state node, this delegate will be called to determine the state of the node based on the specified index
     public delegate NodeState MultiTick(int index);
-    // Define the method for the multi-state node
-    // This method will be called to determine the state of the node based on the specified index
+    // Define the method for the multi-state node, this method will be called to determine the state of the node based on the specified index
     public MultiTick MultiStateMethod;
 
     // Index used by the multi-state node

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Guard : BTAgent
@@ -14,7 +12,7 @@ public class Guard : BTAgent
         BTSequence patrolArea = new("Patrol");
         for (int i = 0; i < patrolPath.Length; i++)
         {
-            BTLeaf goToPos = new BTLeaf("Go To Position" + patrolPath[i].name, i, GoToPoint);
+            BTLeaf goToPos = new("Go To Position" + patrolPath[i].name, i, GoToPoint);
             patrolArea.AddChild(goToPos);
         }
 
@@ -59,7 +57,7 @@ public class Guard : BTAgent
     public BTNode.NodeState ChaseThief()
     {
         float chaseDistance = 10;
-        if(state == ActionState.IDLE)
+        if (state == ActionState.IDLE)
         {
             lastThiefPos = this.transform.position - (transform.position - thief.transform.position).normalized * chaseDistance;
         }

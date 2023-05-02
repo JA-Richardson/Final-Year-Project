@@ -5,7 +5,7 @@ public class NPCBehaviour : BTAgent
     public GameObject home;
     public GameObject[] loot;
     public GameObject enemy;
-    public GameObject crown;
+    public GameObject painting;
     public GameObject pickup;
 
     [Range(0, 100)]
@@ -15,51 +15,53 @@ public class NPCBehaviour : BTAgent
     public override void Start()
     {
         base.Start();
-
-        BTLeaf hasHealth = new BTLeaf("Has Health", HasHealth);
-        BTLeaf goToHome = new BTLeaf("Go To Home", GoToHome);
-        BTLeaf goToHome2 = new BTLeaf("Go To Home2", GoToHome);
-        BTLeaf goToCrown = new BTLeaf("Go To Crown", GoToCrown);
-        BTLeaf canSee = new BTLeaf("Can see enemy?", CanSeeEnemy);
-        BTLeaf flee = new BTLeaf("Run away", FleeFromEnemy);
+        // Behaviour tree setup
+        BTLeaf hasHealth = new("Has Health", HasHealth);
+        BTLeaf goToHome = new("Go To Home", GoToHome);
+        BTLeaf goToHome2 = new("Go To Home2", GoToHome);
+        BTLeaf goToPainting = new("Go To Painting", GoToPainting);
+        BTLeaf canSee = new("Can see enemy?", CanSeeEnemy);
+        BTLeaf flee = new("Run away", FleeFromEnemy);
         BTLeaf isOpen = new("is open", IsOpen);
         BTInverter isClosed = new("is closed");
         isClosed.AddChild(isOpen);
 
-
-        BTRandomSelector chooseGoal = new BTRandomSelector("Choose Goal");
+        //Old behaviour were the agent would look at other items to take before finally choosing one
+        //Left in the tree as I planned on expanding it and giving the agent more objects to choose from
+        BTRandomSelector chooseGoal = new("Choose Goal");
         for (int i = 0; i < loot.Length; i++)
         {
-            BTLeaf goToPos = new BTLeaf("Go To Position" + loot[i].name, i, GoToPosition);
+            BTLeaf goToPos = new("Go To Position" + loot[i].name, i, GoToPosition);
             chooseGoal.AddChild(goToPos);
         }
 
         BTInverter invertHealth = new("Invert Health");
         invertHealth.AddChild(hasHealth);
-        BTInverter cantSeeEnemy = new BTInverter("Can't see");
+        BTInverter cantSeeEnemy = new("Can't see");
         cantSeeEnemy.AddChild(canSee);
-
-        BehaviourTree moveConditions = new BehaviourTree();
+        //The agent can only move if the store is closed, it can't see the enemy and it is below a set amount of health
+        BehaviourTree moveConditions = new();
         BTSequence conditions = new("Move coniditions");
         conditions.AddChild(isClosed);
         conditions.AddChild(cantSeeEnemy);
         conditions.AddChild(invertHealth);
         moveConditions.AddChild(conditions);
-
+        // The agent can only move if the conditions are met
         BTDependencySequence move = new("Move", moveConditions, agent);
         move.AddChild(chooseGoal);
-        move.AddChild(goToCrown);
+        move.AddChild(goToPainting);
         move.AddChild(goToHome);
 
-        BTSequence runAway = new BTSequence("Run Away");
+        // The agent runs away if it see's the store guard
+        BTSequence runAway = new("Run Away");
         runAway.AddChild(canSee);
         runAway.AddChild(flee);
-        
-        BTSelector grabOrLeave = new BTSelector("Grab or Leave");
+        // The agent chooses between attempting to steal the painting or leaving
+        BTSelector grabOrLeave = new("Grab or Leave");
         grabOrLeave.AddChild(move);
         grabOrLeave.AddChild(goToHome);
-
-        BTSelector moveOrRun = new BTSelector("Move or run");
+        // The agent chooses between starting his theft behaviour or running away
+        BTSelector moveOrRun = new("Move or run");
         moveOrRun.AddChild(grabOrLeave);
         moveOrRun.AddChild(runAway);
 
@@ -84,15 +86,15 @@ public class NPCBehaviour : BTAgent
         return BTNode.NodeState.SUCCESS;
     }
 
-    public BTNode.NodeState GoToCrown()
+    public BTNode.NodeState GoToPainting()
     {
-        if (!crown.activeSelf)
+        if (!painting.activeSelf)
             return BTNode.NodeState.FAILURE;
-        BTNode.NodeState s = GoToLocation(crown.transform.position);
+        BTNode.NodeState s = GoToLocation(painting.transform.position);
         if (s == BTNode.NodeState.SUCCESS)
         {
-            crown.transform.parent = this.gameObject.transform;
-            pickup = crown;
+            painting.transform.parent = this.gameObject.transform;
+            pickup = painting;
 
         }
         return s;
@@ -120,7 +122,7 @@ public class NPCBehaviour : BTAgent
                 pickup.SetActive(false);
                 pickup = null;
             }
-            
+
         }
         return s;
     }

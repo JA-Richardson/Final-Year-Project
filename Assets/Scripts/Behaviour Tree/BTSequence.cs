@@ -23,9 +23,6 @@ public class BTSequence : BTNode
             return NodeState.FAILURE;
         }
 
-        //// If the child node fails, return failure state
-        //if (childState == NodeState.FAILURE) return childState;
-
         // If the child node succeeds, move on to the next child node
         currentChild++;
 
